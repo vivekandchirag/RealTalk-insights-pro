@@ -78,9 +78,10 @@ async def add_cors(request: Request, call_next):
         try:
             response = await call_next(request)
         except Exception as e:
-            # Even on a crash, return CORS headers so the browser can read the error
+            import json as _json
+            body = _json.dumps({"detail": f"Server error: {str(e)}"})
             response = Response(
-                content=f'{{"detail": "Server error: {str(e)}"}}',
+                content=body,
                 status_code=500,
                 media_type="application/json",
             )
