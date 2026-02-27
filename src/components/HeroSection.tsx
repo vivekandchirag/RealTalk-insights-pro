@@ -20,7 +20,7 @@ const HeroSection = () => {
         transition={{ delay: 0.2, duration: 0.5 }}
       >
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-4">
-          <span className="text-gradient-brand">NICHOD</span>
+          <span className="text-gradient-brand">RealTalk</span>
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-2">
           YouTube Comment Intelligence for Creators
