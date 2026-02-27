@@ -25,7 +25,7 @@ const HeroSection = () => {
         <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-2">
           YouTube Comment Intelligence for Creators & Audience
         </p>
-        <p className="text-muted-foreground/60 text-sm max-w-lg mx-auto mb-10">
+        <p className="text-foreground text-sm max-w-lg mx-auto mt-6 mb-10">
           Paste a video URL and uncover what your audience truly thinks — questions, praise, and criticism decoded instantly.
         </p>
       </motion.div>
