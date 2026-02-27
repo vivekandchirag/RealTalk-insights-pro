@@ -52,6 +52,19 @@ def _load_api_key() -> str:
 
 os.environ["YOUTUBE_API_KEY"] = _load_api_key()
 
+# ── Download NLTK corpora at startup (required by TextBlob) ──────────────────
+# Render's free tier is ephemeral — corpora must be downloaded on every cold start.
+import nltk
+
+NLTK_DIR = "/tmp/nltk_data"
+os.makedirs(NLTK_DIR, exist_ok=True)
+nltk.data.path.insert(0, NLTK_DIR)
+
+for corpus in ["brown", "punkt_tab", "wordnet",
+               "averaged_perceptron_tagger_eng", "conll2000", "movie_reviews"]:
+    nltk.download(corpus, download_dir=NLTK_DIR, quiet=True)
+
+print("✅ NLTK corpora ready")
 
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(title="RealTalk API", version="1.0.0")
