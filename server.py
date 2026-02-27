@@ -13,6 +13,15 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from googleapiclient.errors import HttpError
+
+from backend.youtube_api import extract_video_id, get_video_comments
+from backend.analyzer import categorize_comments, extract_topics
+from backend.utils import calc_sentiment_score, calc_engagement_rate
+
 # ── Load API key ──────────────────────────────────────────────────────────────
 # On Render: set YOUTUBE_API_KEY as an Environment Variable in the dashboard.
 # Locally:   it falls back to reading .streamlit/secrets.toml.
