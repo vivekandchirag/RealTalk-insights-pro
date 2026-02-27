@@ -70,7 +70,7 @@ const NichodCards = () => {
         className="mb-8"
       >
         <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-          The <span className="text-gradient-brand">Nichod</span> Breakdown
+          The <span className="text-gradient-brand">RealTalk</span> Breakdown
         </h2>
         <p className="text-muted-foreground text-sm mt-1">
           Comments categorized by intent — powered by sentiment analysis
