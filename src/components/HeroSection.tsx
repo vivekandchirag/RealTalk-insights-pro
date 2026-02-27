@@ -4,8 +4,60 @@ import { Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const HeroSection = () => {
+// Locally: http://localhost:8000
+// Production: set VITE_API_URL env var in Netlify dashboard to your Render URL
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+interface AnalyzeResult {
+  total_comments: number;
+  sentiment_score: number;
+  sentiment_label: string;
+  engagement: string;
+  questions: { text: string; count: number }[];
+  appreciation: { text: string; count: number }[];
+  criticism: { text: string; count: number }[];
+  topics: { keyword: string; weight: number; trend: string }[];
+}
+
+interface HeroSectionProps {
+  onResult: (data: AnalyzeResult) => void;
+  onLoading: (loading: boolean) => void;
+  onError: (error: string | null) => void;
+}
+
+const HeroSection = ({ onResult, onLoading, onError }: HeroSectionProps) => {
   const [url, setUrl] = useState("");
+
+  const handleAnalyze = async () => {
+    const trimmed = url.trim();
+    if (!trimmed) {
+      onError("Please enter a YouTube video URL.");
+      return;
+    }
+
+    onError(null);
+    onLoading(true);
+
+    try {
+      const res = await fetch(`${API_BASE}/analyze`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: trimmed }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Analysis failed.");
+      }
+
+      const data: AnalyzeResult = await res.json();
+      onResult(data);
+    } catch (e: any) {
+      onError(e.message || "Failed to connect to the backend. Is server.py running?");
+    } finally {
+      onLoading(false);
+    }
+  };
 
   return (
     <motion.section
@@ -23,7 +75,7 @@ const HeroSection = () => {
           <span className="text-gradient-brand">RealTalk</span>
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-2">
-          YouTube Comment Intelligence for Creators & Audience
+          YouTube Comment Intelligence for Creators &amp; Audience
         </p>
         <p className="text-foreground text-sm max-w-lg mx-auto mt-6 mb-10">
           Paste a video URL and uncover what your audience truly thinks — questions, praise, and criticism decoded instantly.
@@ -41,12 +93,14 @@ const HeroSection = () => {
           <Input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
             placeholder="https://youtube.com/watch?v=..."
             className="pl-12 h-14 bg-muted border-border text-foreground placeholder:text-muted-foreground/50 text-base rounded-xl focus-visible:ring-neon-red/50"
           />
         </div>
         <Button
           size="lg"
+          onClick={handleAnalyze}
           className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl glow-red whitespace-nowrap"
         >
           <Sparkles className="mr-2 h-5 w-5" />
@@ -58,3 +112,4 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+export type { AnalyzeResult };

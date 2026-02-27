@@ -1,0 +1,20 @@
+# RealTalk — Python Backend Dependencies
+# Install with: pip install -r requirements.txt
+
+# ── Streamlit web framework (optional standalone UI) ─────────────────────────
+streamlit>=1.35.0
+
+# ── FastAPI backend server ────────────────────────────────────────────────────
+fastapi>=0.100.0
+uvicorn>=0.24.0
+
+# ── YouTube Data API v3 client ───────────────────────────────────────────────
+google-api-python-client>=2.120.0
+
+# ── NLP / Sentiment Analysis ─────────────────────────────────────────────────
+textblob>=0.18.0
+
+
+# ── TextBlob requires NLTK corpora (downloaded once via: python -m textblob.download_corpora)
+# This is handled automatically on first run, but can be pre-installed with:
+#   python -m textblob.download_corpora

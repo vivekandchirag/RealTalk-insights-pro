@@ -22,3 +22,21 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ── Python backend ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+.env
+
+# ── Streamlit secrets (NEVER commit your API key!) ──────────────────────────
+.streamlit/secrets.toml
+
+# ── Frontend env files (set env vars in Netlify/Vercel dashboard instead) ───
+.env
+.env.local
+.env.production
