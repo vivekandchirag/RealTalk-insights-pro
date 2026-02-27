@@ -56,13 +56,21 @@ os.environ["YOUTUBE_API_KEY"] = _load_api_key()
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(title="RealTalk API", version="1.0.0")
 
-# Manual CORS — guaranteed to work on every response including errors
+# Manual CORS — guaranteed on every response including 500 errors
 @app.middleware("http")
 async def add_cors(request: Request, call_next):
     if request.method == "OPTIONS":
         response = Response(status_code=200)
     else:
-        response = await call_next(request)
+        try:
+            response = await call_next(request)
+        except Exception as e:
+            # Even on a crash, return CORS headers so the browser can read the error
+            response = Response(
+                content=f'{{"detail": "Server error: {str(e)}"}}',
+                status_code=500,
+                media_type="application/json",
+            )
     response.headers["Access-Control-Allow-Origin"]  = "*"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "*"
