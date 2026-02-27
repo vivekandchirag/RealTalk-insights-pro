@@ -13,8 +13,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from pydantic import BaseModel
 from googleapiclient.errors import HttpError
 
@@ -55,13 +56,17 @@ os.environ["YOUTUBE_API_KEY"] = _load_api_key()
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(title="RealTalk API", version="1.0.0")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Manual CORS — guaranteed to work on every response including errors
+@app.middleware("http")
+async def add_cors(request: Request, call_next):
+    if request.method == "OPTIONS":
+        response = Response(status_code=200)
+    else:
+        response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"]  = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
 
 # ── Request / Response models ─────────────────────────────────────────────────
 class AnalyzeRequest(BaseModel):
