@@ -23,10 +23,16 @@ interface HeroSectionProps {
   onResult: (data: AnalyzeResult) => void;
   onLoading: (loading: boolean) => void;
   onError: (error: string | null) => void;
+  onUrlChange?: (url: string) => void;
 }
 
-const HeroSection = ({ onResult, onLoading, onError }: HeroSectionProps) => {
+const HeroSection = ({ onResult, onLoading, onError, onUrlChange }: HeroSectionProps) => {
   const [url, setUrl] = useState("");
+
+  const handleUrlChange = (value: string) => {
+    setUrl(value);
+    onUrlChange?.(value);
+  };
 
   const handleAnalyze = async () => {
     const trimmed = url.trim();
@@ -92,7 +98,7 @@ const HeroSection = ({ onResult, onLoading, onError }: HeroSectionProps) => {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={(e) => handleUrlChange(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
             placeholder="https://youtube.com/watch?v=..."
             className="pl-12 h-14 bg-muted border-border text-foreground placeholder:text-muted-foreground/50 text-base rounded-xl focus-visible:ring-neon-red/50"
