@@ -1,29 +1,48 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Clock } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import MetricsRow from "@/components/MetricsRow";
 import NichodCards from "@/components/NichodCards";
 import TopicHeatmap from "@/components/TopicHeatmap";
 import type { AnalyzeResult } from "@/components/HeroSection";
+import { saveToHistory } from "@/lib/history";
 
 const Index = () => {
   const [result, setResult] = useState<AnalyzeResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const lastUrlRef = useRef("");
+
+  const handleResult = (data: AnalyzeResult) => {
+    setResult(data);
+    saveToHistory(lastUrlRef.current, data);
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/50 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <span className="text-xl font-bold text-gradient-brand tracking-tight">RealTalk</span>
-          <span className="text-xs font-mono text-muted-foreground">v1.0 — beta</span>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/history"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Clock className="h-4 w-4" />
+              History
+            </Link>
+            <span className="text-xs font-mono text-muted-foreground">v1.0 — beta</span>
+          </div>
         </div>
       </header>
 
       <HeroSection
-        onResult={setResult}
+        onResult={handleResult}
         onLoading={setLoading}
         onError={setError}
+        onUrlChange={(u) => { lastUrlRef.current = u; }}
       />
 
       {/* Loading state */}
