@@ -78,7 +78,7 @@ const NichodCards = ({ questions, appreciation, criticism }: NichodCardsProps) =
               {cat.items.length === 0 ? (
                 <p className="text-xs text-muted-foreground italic">No comments in this category.</p>
               ) : (
-                cat.items.slice(0, 5).map((item, j) => (
+                cat.items.slice(0, 7).map((item, j) => (
                   <div
                     key={j}
                     className="flex items-start justify-between gap-3 py-2 border-b border-border/50 last:border-0"

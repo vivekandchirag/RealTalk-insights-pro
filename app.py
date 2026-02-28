@@ -174,7 +174,7 @@ def _badges(trend: str) -> str:
     icons = {"hot": "🔥", "rising": "📈", "steady": "📊", "new": "✨"}
     return icons.get(trend, "")
 
-def _comment_rows(items, limit=5, empty_msg="No comments in this category."):
+def _comment_rows(items, limit=7, empty_msg="No comments in this category."):
     if not items:
         return f'<p style="color:#555;font-size:0.8rem;font-style:italic;margin:0;">{empty_msg}</p>'
     html = ""
